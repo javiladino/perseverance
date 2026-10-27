@@ -27,7 +27,7 @@ A 3D simulation of NASA's Perseverance rover on Mars, built with Three.js. Drive
 
 | Key | Action |
 |---|---|
-| `W` `A` `S` `D` | Drive and steer |
+| `W` `A` `S` `D` (QWERTY) · `Z` `Q` `S` `D` (AZERTY) | Drive and steer |
 | Mouse | Orbit the camera around the rover |
 | `T` | Show / hide mission control |
 | Click a glowing dot | Take a photo with that camera |

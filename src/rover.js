@@ -62,9 +62,11 @@ export async function createRover(url) {
   console.log('Cámaras de Perseverance:', cameras.join(', '));
 
   const state = { yaw: 0, speed: 0, slope: 0, keys: new Set() };
+  // Por posición física (e.code), no por letra: en AZERTY se conduce con Z Q S D
+  const DRIVE_KEYS = { KeyW: 'w', KeyA: 'a', KeyS: 's', KeyD: 'd' };
   const onKey = (down) => (e) => {
-    const k = e.key.toLowerCase();
-    if ('wasd'.includes(k) && k.length === 1) {
+    const k = DRIVE_KEYS[e.code];
+    if (k) {
       if (down) state.keys.add(k);
       else state.keys.delete(k);
     }

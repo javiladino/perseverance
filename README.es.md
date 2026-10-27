@@ -29,7 +29,7 @@ Una simulación 3D del rover Perseverance de la NASA en Marte, hecha con Three.j
 
 | Tecla | Acción |
 |---|---|
-| `W` `A` `S` `D` | Avanzar, retroceder y girar |
+| `W` `A` `S` `D` (QWERTY) · `Z` `Q` `S` `D` (AZERTY) | Avanzar, retroceder y girar |
 | Ratón | Girar la cámara alrededor del rover |
 | `T` | Mostrar / ocultar el control de misión |
 | Clic en un punto que brilla | Tomar una foto con esa cámara |

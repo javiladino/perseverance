@@ -27,7 +27,7 @@ Une simulation 3D du rover Perseverance de la NASA sur Mars, réalisée avec Thr
 
 | Touche | Action |
 |---|---|
-| `W` `A` `S` `D` | Avancer, reculer et tourner (touches QWERTY : sur un clavier AZERTY, `Z` `Q` `S` `D` ne fonctionnent pas encore) |
+| `W` `A` `S` `D` (QWERTY) · `Z` `Q` `S` `D` (AZERTY) | Avancer, reculer et tourner |
 | Souris | Tourner la caméra autour du rover |
 | `T` | Afficher / masquer le contrôle de mission |
 | Clic sur un point lumineux | Prendre une photo avec cette caméra |

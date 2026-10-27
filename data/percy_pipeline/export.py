@@ -1,7 +1,6 @@
 """Marts de DuckDB → archivos que consume el juego (public/)."""
 
 import json
-from datetime import UTC, datetime
 from pathlib import Path
 
 import duckdb
@@ -27,9 +26,10 @@ def export_telemetry(warehouse: Path = WAREHOUSE, public: Path = PUBLIC_DIR) -> 
         rows = con.sql(f"select sol, {', '.join(SERIES.values())} from marts.fct_drives_by_sol order by sol")
         data = rows.fetchall()
     payload = {
-        "generated_at": datetime.now(UTC).isoformat(timespec="seconds"),
+        # Sin marca de hora de generación: el archivo solo cambia si cambian los datos
+        "last_sol": data[-1][0],
         "source": "marts.fct_drives_by_sol (NASA M20_waypoints, solo paradas confirmadas)",
-        "series": {key: [[r[0], round(r[i + 1], 3)] for r in data] for i, key in enumerate(SERIES)},
+        "series": {key: [[r[0], round(float(r[i + 1]), 3)] for r in data] for i, key in enumerate(SERIES)},
     }
     out = public / "data" / "telemetry.json"
     out.parent.mkdir(parents=True, exist_ok=True)

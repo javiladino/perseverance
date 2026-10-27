@@ -2,3 +2,14 @@
 node_modules
 dist
 screenshots
+
+# Plataforma de datos
+warehouse
+.venv
+__pycache__
+.pytest_cache
+.ruff_cache
+data/percy_dbt/target
+data/percy_dbt/logs
+data/percy_dbt/dbt_packages
+.dagster_home

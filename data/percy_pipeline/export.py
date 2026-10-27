@@ -47,8 +47,8 @@ def export_photos(warehouse: Path = WAREHOUSE, public: Path = PUBLIC_DIR) -> dic
             select camera_key, image_id, camera_name, instrument, sol, taken_at, credit, nasa_link, url_large
             from marts.mart_photo_candidates
             where decision = 'approved'
-            qualify row_number() over (partition by camera_key order by taken_at desc) <= {PHOTOS_PER_CAMERA}
-            order by camera_key, taken_at desc
+            qualify row_number() over (partition by camera_key order by taken_at desc, image_id) <= {PHOTOS_PER_CAMERA}
+            order by camera_key, taken_at desc, image_id  -- desempate: fotos con la misma hora
         """).fetchall()
 
     photos_dir = public / "photos"

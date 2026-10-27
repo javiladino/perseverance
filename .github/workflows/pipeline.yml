@@ -42,6 +42,7 @@ jobs:
         env:
           DAGSTER_HOME: ${{ runner.temp }}/dagster
         run: |
+          mkdir -p "$DAGSTER_HOME"
           uv sync --locked
           uv run dbt parse --project-dir percy_dbt --profiles-dir percy_dbt
           uv run dagster asset materialize -m percy_pipeline.definitions --select '*'

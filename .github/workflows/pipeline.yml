@@ -1,0 +1,88 @@
+name: Pipeline diario y Pages
+
+on:
+  schedule:
+    - cron: "0 6 * * *"  # 06:00 UTC, igual que el schedule de Dagster
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write  # commitear public/data y public/photos si cambian
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pipeline
+  cancel-in-progress: false
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            dashboard/package-lock.json
+
+      # El almacén persiste entre ejecuciones: así la ingesta de imágenes sigue siendo incremental
+      - uses: actions/cache/restore@v4
+        with:
+          path: warehouse
+          key: warehouse-${{ github.run_id }}
+          restore-keys: warehouse-
+
+      - name: Materializar todos los assets (dlt → dbt → juego)
+        working-directory: data
+        env:
+          DAGSTER_HOME: ${{ runner.temp }}/dagster
+        run: |
+          uv sync --locked
+          uv run dbt parse --project-dir percy_dbt --profiles-dir percy_dbt
+          uv run dagster asset materialize -m percy_pipeline.definitions --select '*'
+
+      - uses: actions/cache/save@v4
+        with:
+          path: warehouse
+          key: warehouse-${{ github.run_id }}
+
+      - name: Commitear los datos del juego si cambiaron
+        run: |
+          git add public/data public/photos
+          if git diff --cached --quiet; then
+            echo "Sin datos nuevos de NASA"
+          else
+            git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -m "Datos de NASA actualizados por el pipeline diario"
+            git push
+          fi
+
+      - name: Construir el sitio (juego + dashboard + documentación de dbt)
+        run: |
+          npm ci
+          npx vite build --base=/${{ github.event.repository.name }}/
+          (cd dashboard && npm ci && npm run build)
+          cp -r dashboard/dist dist/dashboard
+          (cd data/percy_dbt && uv run --project .. dbt docs generate --static --profiles-dir .)
+          mkdir -p dist/dbt && cp data/percy_dbt/target/static_index.html dist/dbt/index.html
+        env:
+          PERCY_WAREHOUSE: ${{ github.workspace }}/warehouse/percy.duckdb
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: pipeline
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

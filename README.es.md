@@ -24,6 +24,38 @@ Una simulación 3D del rover Perseverance de la NASA en Marte, hecha con Three.j
 
 ![Una foto real de Mastcam-Z abierta desde el rover](docs/images/camera-photo.png)
 
+## Plataforma de datos
+
+El juego es el último consumidor de un pequeño *modern data stack* que se ejecuta cada día, gratis, en GitHub Actions:
+
+```
+Historial de manejos NASA ─┐                     ┌─► marts ─► JSON ─► el juego (public/data, public/photos)
+API de imágenes de NASA ───┼─ dlt ─► DuckDB ─► dbt ┤
+órbitas (Python) ──────────┘                     └─► tests ─► dashboard · documentación dbt (GitHub Pages)
+                           Dagster: assets, linaje, checks, ejecución diaria
+```
+
+![Linaje de assets en Dagster: ingesta → transformación → juego](docs/images/dagster-lineage.png)
+
+- **Ingesta — [dlt](https://dlthub.com):** historial de manejos (recarga completa), imágenes sin procesar (incremental por `date_received`, fusión por `imageid`) y tiempo de luz Tierra–Marte por sol.
+- **Almacén — [DuckDB](https://duckdb.org):** un solo archivo, `warehouse/percy.duckdb`.
+- **Transformación — [dbt](https://www.getdbt.com):** `staging → intermediate → marts`, 32 tests y control de frescura de las fuentes. Detectó dos problemas reales en los datos:
+  - Las paradas intermedias ponían el odómetro a 0 y hundían la gráfica de distancia del juego; los marts solo guardan las paradas confirmadas.
+  - Las horas salían desplazadas según la zona horaria del equipo.
+- **Fotos, con una persona en el circuito:** reglas de dbt filtran las imágenes a color, de fotograma completo y grandes a partir de los identificadores de NASA; la elección estética final vive en el seed `photo_curation`.
+- **Orquestación — [Dagster](https://dagster.io):** un único grafo de assets, de NASA a los archivos del juego. Los tests de dbt aparecen como asset checks, y dos checks bloqueantes protegen el contrato de datos del juego.
+- **Dashboard — [Observable Framework](https://observablehq.com/framework/):** un sitio estático construido a partir de los marts.
+- **CI/CD — GitHub Actions:** cada PR ejecuta ruff, pytest, el pipeline completo y la comprobación del juego en el navegador. Un trabajo diario refresca los datos, hace commit si cambiaron y publica el juego, el dashboard y la documentación de dbt en GitHub Pages.
+
+**En vivo:** [juego](https://javiladino.github.io/perseverance/) · [dashboard](https://javiladino.github.io/perseverance/dashboard/) · [documentación dbt](https://javiladino.github.io/perseverance/dbt/)
+
+```bash
+cd data
+uv sync
+uv run dbt parse --project-dir percy_dbt --profiles-dir percy_dbt
+uv run dagster dev -m percy_pipeline.definitions   # interfaz en http://127.0.0.1:3000
+```
+
 
 ## Controles
 
@@ -51,7 +83,6 @@ npm run dev        # http://127.0.0.1:5173
 | `npm run dev` | Servidor de desarrollo |
 | `npm run build` | Versión de producción en `dist/` |
 | `npm run check` | Abre el juego en Chrome y comprueba que cargan los 4 datos, que `T` oculta el panel, que cada cámara abre una foto real y que la consola no tiene errores. Guarda una captura en `screenshots/check-camara.png` |
-| `npm run datos:nasa` | Descarga la copia más reciente del historial de manejos de la NASA en `public/data/` |
 
 ## Estructura del proyecto
 
@@ -68,19 +99,24 @@ src/
   terrain.js, sky.js, rocks.js, dust.js, moons.js
 public/
   models/         modelo 3D de Perseverance (Draco)
-  data/           copia del historial de manejos de la NASA
+  data/           telemetry.json exportado desde los marts de dbt
   photos/         fotos sin procesar elegidas + photos.json
 scripts/
   check.mjs       comprobación automática en el navegador
-  fetch-nasa.mjs  actualiza el historial de manejos
+data/
+  percy_pipeline/ ingesta con dlt, órbitas, exportación, definiciones de Dagster
+  percy_dbt/      modelos, seeds y tests de dbt
+  tests/          pytest
+dashboard/        dashboard con Observable Framework
+.github/workflows/ CI y pipeline diario
 mapa-del-repo.html  guía de Open MCT
 ```
 
 ## Datos y créditos
 
 - **Modelo 3D:** Perseverance, NASA/JPL-Caltech.
-- **Historial de manejos:** [M20_waypoints.json](https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json), NASA/JPL-Caltech. Se guarda una copia local porque el servidor de la NASA bloquea a los navegadores sin ventana (headless).
-- **Fotos:** [imágenes sin procesar de Mars 2020](https://mars.nasa.gov/mars2020/multimedia/raw-images/), con el crédito en cada foto (NASA/JPL-Caltech, NASA/JPL-Caltech/ASU). Elegidas a mano: a color, sin cielo vacío, sin sol ni objetivos de calibración.
+- **Historial de manejos:** [M20_waypoints.json](https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json), NASA/JPL-Caltech. Lo carga la plataforma de datos; el juego solo lee los marts exportados.
+- **Fotos:** [imágenes sin procesar de Mars 2020](https://mars.nasa.gov/mars2020/multimedia/raw-images/), con el crédito en cada foto (NASA/JPL-Caltech, NASA/JPL-Caltech/ASU). Filtradas por reglas de dbt y aprobadas a mano en el seed `photo_curation`.
 - **Órbitas:** elementos orbitales aproximados de JPL (Standish), válidos entre 1800 y 2050.
 - Hecho con [Three.js](https://threejs.org) y [Vite](https://vite.dev).
 

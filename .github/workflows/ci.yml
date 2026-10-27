@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  pull_request:
+
+jobs:
+  data:
+    name: Plataforma de datos
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: data
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - run: uv sync --locked
+      - run: uv run ruff check .
+      - run: uv run pytest
+      # Pipeline completo: ingesta (NASA) → dbt build con tests → exportación al juego
+      # Dagster lee el manifest de dbt: se genera antes (prepare_if_dev solo actúa con dagster dev)
+      - run: uv run dbt parse --project-dir percy_dbt --profiles-dir percy_dbt
+      - run: uv run dagster asset materialize -m percy_pipeline.definitions --select '*'
+        env:
+          DAGSTER_HOME: ${{ runner.temp }}/dagster
+
+  game:
+    name: Juego
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      # Chrome viene instalado en ubuntu-latest; check.mjs lo usa sin GPU (SwiftShader)
+      - run: npm run check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: captura-check
+          path: screenshots/check-camara.png

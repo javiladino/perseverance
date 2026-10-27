@@ -9,6 +9,9 @@ macro-paths: ["macros"]
 
 models:
   percy:
+    +meta:
+      dagster:
+        group: transformation  # grupo en el linaje de Dagster
     staging:
       +materialized: view
       +schema: staging
@@ -21,4 +24,7 @@ models:
 
 seeds:
   percy:
+    +meta:
+      dagster:
+        group: transformation
     +schema: seeds

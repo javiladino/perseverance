@@ -23,6 +23,38 @@ A 3D simulation of NASA's Perseverance rover on Mars, built with Three.js. Drive
 
 ![A real Mastcam-Z photo opened from the rover](docs/images/camera-photo.png)
 
+## Data platform
+
+The game is the last consumer of a small modern data stack that runs every day for free on GitHub Actions:
+
+```
+NASA drive history ─┐                     ┌─► marts ─► JSON ─► the game (public/data, public/photos)
+NASA raw images API ─┼─ dlt ─► DuckDB ─► dbt ┤
+orbits (Python) ─────┘                     └─► tests ─► dashboard · dbt docs (GitHub Pages)
+                     Dagster: assets, lineage, checks, daily schedule
+```
+
+![Dagster asset lineage: ingestion → transformation → game](docs/images/dagster-lineage.png)
+
+- **Ingestion — [dlt](https://dlthub.com):** drive history (full refresh), raw images (incremental on `date_received`, merged on `imageid`) and Earth–Mars light time per sol.
+- **Warehouse — [DuckDB](https://duckdb.org):** a single file, `warehouse/percy.duckdb`.
+- **Transformation — [dbt](https://www.getdbt.com):** `staging → intermediate → marts`, 32 tests and source freshness. Two real data issues it caught:
+  - Intermediate stops reset the odometer to 0, which made the game's distance chart dip; the marts only keep confirmed stops.
+  - Timestamps were shifted by the machine's time zone.
+- **Photos, human-in-the-loop:** dbt rules filter colour, full-frame, large images from NASA's own IDs; the final aesthetic pick lives in the `photo_curation` seed.
+- **Orchestration — [Dagster](https://dagster.io):** one asset graph from NASA to the game files. dbt tests show up as asset checks, and two blocking checks guard the game's data contract.
+- **Dashboard — [Observable Framework](https://observablehq.com/framework/):** a static site built from the marts.
+- **CI/CD — GitHub Actions:** PRs run ruff, pytest, the full pipeline and the in-browser game check. A daily job refreshes the data, commits it if it changed, and publishes the game, dashboard and dbt docs to GitHub Pages.
+
+**Live:** [game](https://javiladino.github.io/perseverance/) · [dashboard](https://javiladino.github.io/perseverance/dashboard/) · [dbt docs](https://javiladino.github.io/perseverance/dbt/)
+
+```bash
+cd data
+uv sync
+uv run dbt parse --project-dir percy_dbt --profiles-dir percy_dbt
+uv run dagster dev -m percy_pipeline.definitions   # UI at http://127.0.0.1:3000
+```
+
 ## Controls
 
 | Key | Action |
@@ -49,7 +81,6 @@ npm run dev        # http://127.0.0.1:5173
 | `npm run dev` | Development server |
 | `npm run build` | Production build in `dist/` |
 | `npm run check` | Opens the game in Chrome and verifies the 4 data points load, that `T` hides the panel, that every camera opens a real photo, and that the console is error-free. Saves a screenshot to `screenshots/check-camara.png` |
-| `npm run datos:nasa` | Downloads the latest copy of NASA's drive history to `public/data/` |
 
 ## Project structure
 
@@ -66,19 +97,24 @@ src/
   terrain.js, sky.js, rocks.js, dust.js, moons.js
 public/
   models/         Perseverance 3D model (Draco)
-  data/           copy of NASA's drive history
+  data/           telemetry.json exported from the dbt marts
   photos/         selected raw images + photos.json
 scripts/
   check.mjs       automated in-browser check
-  fetch-nasa.mjs  updates the drive history
+data/
+  percy_pipeline/ dlt ingestion, orbits, export, Dagster definitions
+  percy_dbt/      dbt models, seeds and tests
+  tests/          pytest
+dashboard/        Observable Framework dashboard
+.github/workflows/ CI and daily pipeline
 mapa-del-repo.html  guide to Open MCT (in Spanish)
 ```
 
 ## Data and credits
 
 - **3D model:** Perseverance, NASA/JPL-Caltech.
-- **Drive history:** [M20_waypoints.json](https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json), NASA/JPL-Caltech. A local copy is kept because NASA's server blocks requests from headless browsers.
-- **Photos:** [Mars 2020 raw images](https://mars.nasa.gov/mars2020/multimedia/raw-images/), credited in each photo (NASA/JPL-Caltech, NASA/JPL-Caltech/ASU). Hand-picked: in color, no empty sky, no sun, no calibration targets.
+- **Drive history:** [M20_waypoints.json](https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json), NASA/JPL-Caltech. Ingested by the data platform; the game only reads the exported marts.
+- **Photos:** [Mars 2020 raw images](https://mars.nasa.gov/mars2020/multimedia/raw-images/), credited in each photo (NASA/JPL-Caltech, NASA/JPL-Caltech/ASU). Filtered by dbt rules and approved by hand in the `photo_curation` seed.
 - **Orbits:** approximate orbital elements from JPL (Standish), valid 1800–2050.
 - Built with [Three.js](https://threejs.org) and [Vite](https://vite.dev).
 

@@ -1,6 +1,9 @@
 ![Perseverance](docs/images/demo_percy.gif)
 # Perseverance — Simulation du rover martien
 
+[![CI](https://github.com/javiladino/perseverance/actions/workflows/ci.yml/badge.svg)](https://github.com/javiladino/perseverance/actions/workflows/ci.yml)
+[![Pipeline](https://github.com/javiladino/perseverance/actions/workflows/pipeline.yml/badge.svg)](https://github.com/javiladino/perseverance/actions/workflows/pipeline.yml)
+
 [English](README.md) · **Français** · [Español](README.es.md)
 
 Une simulation 3D du rover Perseverance de la NASA sur Mars, réalisée avec Three.js. Pilotez le rover à travers les dunes, suivez la télémétrie réelle de la NASA dans un panneau de contrôle de mission, et cliquez sur les caméras du rover pour voir de vraies photos prises sur Mars ces derniers jours.

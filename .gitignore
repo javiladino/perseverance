@@ -14,3 +14,5 @@ data/percy_dbt/logs
 data/percy_dbt/dbt_packages
 .dagster_home
 data/percy_dbt/.user.yml
+dashboard/dist
+dashboard/src/.observablehq/cache

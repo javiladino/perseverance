@@ -1,0 +1,13 @@
+{
+  "name": "percy-dashboard",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "observable preview",
+    "build": "observable build",
+    "clean": "rimraf src/.observablehq/cache"
+  },
+  "devDependencies": {
+    "@observablehq/framework": "1.13.3"
+  }
+}

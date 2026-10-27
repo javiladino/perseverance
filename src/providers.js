@@ -1,30 +1,22 @@
 // Proveedores de telemetría de Percy
 
-// Copia local de https://mars.nasa.gov/mmgis-maps/M20/Layers/json/M20_waypoints.json
-// (se actualiza con npm run datos:nasa)
-const WAYPOINTS_URL = `${import.meta.env.BASE_URL}data/M20_waypoints.json`;
+// Series por sol ya modeladas por la plataforma de datos (data/: dlt → DuckDB → dbt):
+// el mart fct_drives_by_sol exportado por data/percy_pipeline/export.py
+const TELEMETRY_URL = `${import.meta.env.BASE_URL}data/telemetry.json`;
 
-// Historial de manejos de la NASA: un punto por parada del rover, eje X = sol
+// Historial de manejos de la NASA: un punto por sol con movimiento
 export function createWaypointsProvider() {
   let loading = null;
   const load = () =>
-    (loading ??= fetch(WAYPOINTS_URL)
-      .then((r) => {
-        if (!r.ok) throw new Error(`Waypoints HTTP ${r.status}`);
-        return r.json();
-      })
-      .then((json) => json.features.map((f) => f.properties).sort((a, b) => a.sol - b.sol)));
-
-  const fields = {
-    distance: (p) => p.dist_total_m / 1000,
-    elevation: (p) => p.elev_geoid,
-    tilt: (p) => p.tilt,
-  };
+    (loading ??= fetch(TELEMETRY_URL).then((r) => {
+      if (!r.ok) throw new Error(`Telemetría HTTP ${r.status}`);
+      return r.json();
+    }));
 
   return {
     async request(key) {
-      const rows = await load();
-      return rows.filter((p) => Number.isFinite(fields[key](p))).map((p) => ({ x: p.sol, y: fields[key](p) }));
+      const { series } = await load();
+      return series[key].map(([x, y]) => ({ x, y }));
     },
   };
 }

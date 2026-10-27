@@ -1,14 +1,43 @@
 {
- "MASTCAM": [
+ "HAZCAM": [
   {
-   "file": "photos/ZL0_2019_0846180221_818EBY_N0920000ZCAM10051_0630LMJ.jpg",
-   "camera": "Mastcam-Z",
-   "instrument": "MCZ_LEFT",
-   "sol": 2019,
-   "taken": "2026-10-25T06:29:06.059Z",
-   "credit": "NASA/JPL-Caltech/ASU",
-   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_2019_0846180221_818EBY_N0920000ZCAM10051_0630LMJ"
+   "file": "photos/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_01_095J.jpg",
+   "camera": "Hazcam frontal",
+   "instrument": "FRONT_HAZCAM_LEFT_A",
+   "sol": 2018,
+   "taken": "2026-10-24T05:34:46.324Z",
+   "credit": "NASA/JPL-Caltech",
+   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_01_095J"
   },
+  {
+   "file": "photos/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_04_095J.jpg",
+   "camera": "Hazcam frontal",
+   "instrument": "FRONT_HAZCAM_LEFT_A",
+   "sol": 2018,
+   "taken": "2026-10-24T05:34:46.324Z",
+   "credit": "NASA/JPL-Caltech",
+   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_04_095J"
+  },
+  {
+   "file": "photos/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_02_095J.jpg",
+   "camera": "Hazcam frontal",
+   "instrument": "FRONT_HAZCAM_LEFT_A",
+   "sol": 2018,
+   "taken": "2026-10-24T05:34:46.324Z",
+   "credit": "NASA/JPL-Caltech",
+   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_02_095J"
+  },
+  {
+   "file": "photos/FLF_2018_0846088669_950ECM_N0920000FHAZ00203_19_295J.jpg",
+   "camera": "Hazcam frontal",
+   "instrument": "FRONT_HAZCAM_LEFT_A",
+   "sol": 2018,
+   "taken": "2026-10-24T05:03:02.477Z",
+   "credit": "NASA/JPL-Caltech",
+   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846088669_950ECM_N0920000FHAZ00203_19_295J"
+  }
+ ],
+ "MASTCAM": [
   {
    "file": "photos/ZL0_2020_0846262963_275EBY_N0920000ZCAM10052_1100LMJ.jpg",
    "camera": "Mastcam-Z",
@@ -28,6 +57,15 @@
    "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_2019_0846180234_818EBY_N0920000ZCAM10051_0630LMJ"
   },
   {
+   "file": "photos/ZL0_2019_0846180221_818EBY_N0920000ZCAM10051_0630LMJ.jpg",
+   "camera": "Mastcam-Z",
+   "instrument": "MCZ_LEFT",
+   "sol": 2019,
+   "taken": "2026-10-25T06:29:06.059Z",
+   "credit": "NASA/JPL-Caltech/ASU",
+   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/ZL0_2019_0846180221_818EBY_N0920000ZCAM10051_0630LMJ"
+  },
+  {
    "file": "photos/ZL0_2019_0846180208_818EBY_N0920000ZCAM10051_0630LMJ.jpg",
    "camera": "Mastcam-Z",
    "instrument": "MCZ_LEFT",
@@ -38,24 +76,6 @@
   }
  ],
  "NAVCAM": [
-  {
-   "file": "photos/NLF_2018_0846090470_395ECM_N0920000NCAM00709_03_095J.jpg",
-   "camera": "Navcam",
-   "instrument": "NAVCAM_LEFT",
-   "sol": 2018,
-   "taken": "2026-10-24T05:33:02.240Z",
-   "credit": "NASA/JPL-Caltech",
-   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_2018_0846090470_395ECM_N0920000NCAM00709_03_095J"
-  },
-  {
-   "file": "photos/NLF_2018_0846090470_395ECM_N0920000NCAM00709_09_095J.jpg",
-   "camera": "Navcam",
-   "instrument": "NAVCAM_LEFT",
-   "sol": 2018,
-   "taken": "2026-10-24T05:33:02.240Z",
-   "credit": "NASA/JPL-Caltech",
-   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_2018_0846090470_395ECM_N0920000NCAM00709_09_095J"
-  },
   {
    "file": "photos/NLF_2018_0846090470_395ECM_N0920000NCAM00709_01_095J.jpg",
    "camera": "Navcam",
@@ -73,44 +93,24 @@
    "taken": "2026-10-24T05:33:02.240Z",
    "credit": "NASA/JPL-Caltech",
    "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_2018_0846090470_395ECM_N0920000NCAM00709_08_095J"
-  }
- ],
- "HAZCAM": [
-  {
-   "file": "photos/FLF_2018_0846088669_950ECM_N0920000FHAZ00203_19_295J.jpg",
-   "camera": "Hazcam frontal",
-   "instrument": "FRONT_HAZCAM_LEFT_A",
-   "sol": 2018,
-   "taken": "2026-10-24T05:03:02.477Z",
-   "credit": "NASA/JPL-Caltech",
-   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846088669_950ECM_N0920000FHAZ00203_19_295J"
   },
   {
-   "file": "photos/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_02_095J.jpg",
-   "camera": "Hazcam frontal",
-   "instrument": "FRONT_HAZCAM_LEFT_A",
+   "file": "photos/NLF_2018_0846090470_395ECM_N0920000NCAM00709_03_095J.jpg",
+   "camera": "Navcam",
+   "instrument": "NAVCAM_LEFT",
    "sol": 2018,
-   "taken": "2026-10-24T05:34:46.324Z",
+   "taken": "2026-10-24T05:33:02.240Z",
    "credit": "NASA/JPL-Caltech",
-   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_02_095J"
+   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_2018_0846090470_395ECM_N0920000NCAM00709_03_095J"
   },
   {
-   "file": "photos/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_01_095J.jpg",
-   "camera": "Hazcam frontal",
-   "instrument": "FRONT_HAZCAM_LEFT_A",
+   "file": "photos/NLF_2018_0846090470_395ECM_N0920000NCAM00709_09_095J.jpg",
+   "camera": "Navcam",
+   "instrument": "NAVCAM_LEFT",
    "sol": 2018,
-   "taken": "2026-10-24T05:34:46.324Z",
+   "taken": "2026-10-24T05:33:02.240Z",
    "credit": "NASA/JPL-Caltech",
-   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_01_095J"
-  },
-  {
-   "file": "photos/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_04_095J.jpg",
-   "camera": "Hazcam frontal",
-   "instrument": "FRONT_HAZCAM_LEFT_A",
-   "sol": 2018,
-   "taken": "2026-10-24T05:34:46.324Z",
-   "credit": "NASA/JPL-Caltech",
-   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/FLF_2018_0846090574_426ECM_N0920000FHAZ02008_04_095J"
+   "link": "https://mars.nasa.gov/mars2020/multimedia/raw-images/NLF_2018_0846090470_395ECM_N0920000NCAM00709_09_095J"
   }
  ],
  "WATSON": [

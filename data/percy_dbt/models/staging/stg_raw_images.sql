@@ -9,7 +9,8 @@ select
     regexp_extract(imageid, '_\d{3}([A-Z]{3})_', 1)             as product_code,
     regexp_extract(extended__dimension, '\((\d+),', 1)::int     as width_px,
     regexp_extract(extended__dimension, ',(\d+)\)', 1)::int     as height_px,
-    date_taken_utc::timestamp                                   as taken_at,
+    -- dlt la carga como timestamptz: a UTC explícito, no a la zona horaria del equipo
+    date_taken_utc at time zone 'UTC'                           as taken_at,
     date_received::timestamptz                                  as received_at,
     image_files__large                                          as url_large,
     image_files__small                                          as url_small,

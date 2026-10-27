@@ -1,0 +1,8 @@
+instrument,camera_key,camera_name,eye
+MCZ_LEFT,MASTCAM,Mastcam-Z,left
+MCZ_RIGHT,MASTCAM,Mastcam-Z,right
+NAVCAM_LEFT,NAVCAM,Navcam,left
+NAVCAM_RIGHT,NAVCAM,Navcam,right
+FRONT_HAZCAM_LEFT_A,HAZCAM,Hazcam frontal,left
+FRONT_HAZCAM_RIGHT_A,HAZCAM,Hazcam frontal,right
+SHERLOC_WATSON,WATSON,WATSON,

@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: stg_waypoints
+    columns:
+      - name: stop_id
+        data_tests: [unique, not_null]
+      - name: sol
+        data_tests: [not_null]
+  - name: stg_raw_images
+    columns:
+      - name: image_id
+        data_tests: [unique, not_null]
+      - name: instrument
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('cameras')
+                field: instrument
+  - name: stg_light_time
+    columns:
+      - name: sol
+        data_tests: [unique, not_null]

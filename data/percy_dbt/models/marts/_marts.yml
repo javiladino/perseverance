@@ -1,0 +1,35 @@
+version: 2
+
+models:
+  - name: fct_drives_by_sol
+    description: Una fila por sol con movimiento; alimenta las gráficas del control de misión.
+    columns:
+      - name: sol
+        data_tests: [unique, not_null]
+      - name: odometer_m
+        data_tests: [not_null]
+      - name: tilt_deg
+        data_tests:
+          - value_in_range:
+              arguments: {min_value: 0, max_value: 45}
+  - name: dim_cameras
+    columns:
+      - name: camera_key
+        data_tests:
+          - unique
+          - accepted_values:
+              arguments:
+                values: [MASTCAM, NAVCAM, HAZCAM, WATSON]
+  - name: fct_images
+    columns:
+      - name: image_id
+        data_tests: [unique, not_null]
+  - name: mart_photo_candidates
+    columns:
+      - name: image_id
+        data_tests: [unique]
+      - name: decision
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: [approved, rejected, pending]

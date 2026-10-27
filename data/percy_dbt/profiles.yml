@@ -1,0 +1,8 @@
+percy:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      # Dagster pasa la ruta absoluta; a mano, ejecuta dbt desde data/percy_dbt
+      path: "{{ env_var('PERCY_WAREHOUSE', '../../warehouse/percy.duckdb') }}"
+      threads: 4

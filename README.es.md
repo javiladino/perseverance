@@ -185,6 +185,7 @@ Para aprobar fotos nuevas, añade su `image_id` con `approved` a [`photo_curatio
 | `W` `A` `S` `D` (QWERTY) · `Z` `Q` `S` `D` (AZERTY) | Avanzar, retroceder y girar |
 | Ratón | Girar la cámara alrededor del rover |
 | `T` | Mostrar / ocultar el control de misión |
+| `FR` · `ES` | Idioma de la interfaz: francés por defecto, español a elección (o `?lang=es` en la URL) |
 | Clic en un punto que brilla | Tomar una foto con esa cámara |
 | Clic en la foto | Ampliarla |
 | `←` `→` | Más fotos de la misma cámara |

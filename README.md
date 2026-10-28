@@ -184,6 +184,7 @@ To approve new photos, add their `image_id` with `approved` to [`photo_curation.
 | `W` `A` `S` `D` (QWERTY) · `Z` `Q` `S` `D` (AZERTY) | Drive and steer |
 | Mouse | Orbit the camera around the rover |
 | `T` | Show / hide mission control |
+| `FR` · `ES` | Interface language: French by default, Spanish on demand (or `?lang=es` in the URL) |
 | Click a glowing dot | Take a photo with that camera |
 | Click the photo | Enlarge it |
 | `←` `→` | More photos from the same camera |

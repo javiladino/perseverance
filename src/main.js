@@ -11,19 +11,19 @@ import { createTelemetry } from './telemetry.js';
 import { createWaypointsProvider, createLightTimeProvider } from './providers.js';
 import { createMissionControl } from './hud.js';
 import { createCameraSpots } from './cameras.js';
+import { t } from './i18n.js';
 
 // Control de misión: cada dato con su nombre, unidad y proveedor, como en Open MCT
 const telemetry = createTelemetry();
 const waypoints = createWaypointsProvider();
-const NASA = 'NASA · manejos';
-telemetry.addPoint({ key: 'distance', name: 'Distancia recorrida', unit: 'km', digits: 2, source: NASA,
-  meaning: 'Todo lo que Percy ha rodado desde que aterrizó.' }, waypoints);
-telemetry.addPoint({ key: 'elevation', name: 'Altura del terreno', unit: 'm', digits: 0, source: NASA,
-  meaning: 'Altura respecto al “nivel del mar” de Marte. Sube porque escala el borde del cráter.' }, waypoints);
-telemetry.addPoint({ key: 'tilt', name: 'Inclinación', unit: '°', digits: 1, source: NASA,
-  meaning: 'Cuánto se ladea el rover en cada parada. A más grados, más empinado el suelo.' }, waypoints);
-telemetry.addPoint({ key: 'light', name: 'Tiempo de luz Tierra–Marte', unit: 'min', digits: 2, source: 'calculado en vivo',
-  meaning: 'Lo que tarda una orden nuestra en llegar a Percy. Por eso maneja solo.' }, createLightTimeProvider());
+telemetry.addPoint({ key: 'distance', name: t.distance, unit: 'km', digits: 2, source: t.nasaSource,
+  meaning: t.distanceMeaning }, waypoints);
+telemetry.addPoint({ key: 'elevation', name: t.elevation, unit: 'm', digits: 0, source: t.nasaSource,
+  meaning: t.elevationMeaning }, waypoints);
+telemetry.addPoint({ key: 'tilt', name: t.tilt, unit: '°', digits: 1, source: t.nasaSource,
+  meaning: t.tiltMeaning }, waypoints);
+telemetry.addPoint({ key: 'light', name: t.light, unit: 'min', digits: 2, source: t.liveSource,
+  meaning: t.lightMeaning }, createLightTimeProvider());
 createMissionControl(telemetry);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });

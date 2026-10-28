@@ -184,6 +184,7 @@ Pour approuver de nouvelles photos, ajoutez leur `image_id` avec `approved` dans
 | `W` `A` `S` `D` (QWERTY) · `Z` `Q` `S` `D` (AZERTY) | Avancer, reculer et tourner |
 | Souris | Tourner la caméra autour du rover |
 | `T` | Afficher / masquer le contrôle de mission |
+| `FR` · `ES` | Langue de l'interface : français par défaut, espagnol au choix (ou `?lang=es` dans l'URL) |
 | Clic sur un point lumineux | Prendre une photo avec cette caméra |
 | Clic sur la photo | L'agrandir |
 | `←` `→` | Autres photos de la même caméra |

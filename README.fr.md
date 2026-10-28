@@ -45,6 +45,8 @@ Le jeu est le dernier consommateur d'une petite *modern data stack*, gratuite et
 | 🔁 Workflows | [`.github/workflows/`](.github/workflows/) |
 | 🗺️ Interface Dagster (locale) | http://127.0.0.1:3000, voir [Exécution locale](#exécution-locale) |
 
+![Tableau de bord des données (Observable Framework) : indicateurs, trajet du rover dans le cratère Jezero et distance cumulée](docs/images/dashboard.png)
+
 ### Architecture
 
 ```mermaid
@@ -111,6 +113,13 @@ flowchart LR
   fct_drives_by_sol ==> T["telemetry.json"]
   mart_photo_candidates ==> P["photos.json + photos"]
 ```
+
+<details>
+<summary>Image statique des diagrammes</summary>
+
+![Diagrammes d'architecture et de lignage dbt](docs/images/infra.png)
+
+</details>
 
 ### Comment elle est construite, couche par couche
 

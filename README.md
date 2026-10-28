@@ -45,6 +45,8 @@ The game is the last consumer of a small, free and fully reproducible modern dat
 | 🔁 Workflows | [`.github/workflows/`](.github/workflows/) |
 | 🗺️ Dagster UI (local) | http://127.0.0.1:3000, see [Run it locally](#run-it-locally) |
 
+![Data dashboard (Observable Framework): KPIs, the rover's route in Jezero crater and cumulative distance](docs/images/dashboard.png)
+
 ### Architecture
 
 ```mermaid
@@ -111,6 +113,13 @@ flowchart LR
   fct_drives_by_sol ==> T["telemetry.json"]
   mart_photo_candidates ==> P["photos.json + photos"]
 ```
+
+<details>
+<summary>Static image of the diagrams</summary>
+
+![Architecture and dbt lineage diagrams](docs/images/infra.png)
+
+</details>
 
 ### How it is built, layer by layer
 

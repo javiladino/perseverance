@@ -1,12 +1,13 @@
 import * as THREE from 'three';
+import { t } from './i18n.js';
 
 // Las cámaras de Percy como puntos que brillan sobre su pieza del modelo.
 // Clic: obturador, flash y una foto real de esa cámara que se revela poco a poco.
 const CAMERAS = [
-  { node: 'Mastcam_Z_cams', key: 'MASTCAM', label: 'Mastcam-Z · los ojos del mástil' },
-  { node: 'NavCams', key: 'NAVCAM', label: 'Navcam · para navegar' },
-  { node: 'hazcams_front', key: 'HAZCAM', label: 'Hazcam · vigila obstáculos' },
-  { node: 'WATSON', key: 'WATSON', label: 'WATSON · lupa del brazo' },
+  { node: 'Mastcam_Z_cams', key: 'MASTCAM' },
+  { node: 'NavCams', key: 'NAVCAM' },
+  { node: 'hazcams_front', key: 'HAZCAM' },
+  { node: 'WATSON', key: 'WATSON' },
 ];
 
 const SPOT_GAP = 26; // px mínimos entre puntos
@@ -44,7 +45,7 @@ const CSS = `
 
 function daysAgo(iso) {
   const d = Math.floor((Date.now() - new Date(iso).getTime()) / 86400000);
-  return d <= 0 ? 'hoy' : d === 1 ? 'hace 1 día' : `hace ${d} días`;
+  return d <= 0 ? t.today : t.daysAgo(d);
 }
 
 export async function createCameraSpots(roverObject) {
@@ -59,7 +60,7 @@ export async function createCameraSpots(roverObject) {
   viewer.id = 'cam-viewer';
   viewer.innerHTML = `<div class="shutter top"></div><div class="shutter bottom"></div><div class="flash"></div>
     <figure><img alt=""><figcaption><span><b></b> · <span class="when"></span></span>
-    <span class="help">clic ampliar · ← → más fotos · Esc volver</span></figcaption></figure>`;
+    <span class="help">${t.photoHelp}</span></figcaption></figure>`;
   document.body.appendChild(viewer);
   const figure = viewer.querySelector('figure'), img = viewer.querySelector('img');
   const title = viewer.querySelector('b'), when = viewer.querySelector('.when');
@@ -76,9 +77,10 @@ export async function createCameraSpots(roverObject) {
     viewer.classList.add('open', 'snap');
     figure.className = 'developing';
     window.__cameras = { open: key, loaded: false };
-    title.textContent = p.camera;
+    const [cameraName] = t.cameras[key];
+    title.textContent = cameraName;
     when.textContent = `sol ${p.sol} · ${daysAgo(p.taken)} · ${p.credit}`;
-    img.alt = `Foto de ${p.camera}, sol ${p.sol}`;
+    img.alt = t.photoAlt(cameraName, p.sol);
     img.onload = () => {
       // La foto “se revela” justo después del flash
       setTimeout(() => {
@@ -110,8 +112,9 @@ export async function createCameraSpots(roverObject) {
     const el = document.createElement('button');
     el.className = 'cam-spot';
     el.dataset.camera = c.key;
-    el.setAttribute('aria-label', c.label);
-    el.innerHTML = `<span>${c.label}</span>`;
+    const label = t.cameras[c.key].join(' · ');
+    el.setAttribute('aria-label', label);
+    el.innerHTML = `<span>${label}</span>`;
     el.addEventListener('click', () => show(c.key, 0));
     document.body.appendChild(el);
     return { el, part, box: new THREE.Box3(), pos: new THREE.Vector3() };

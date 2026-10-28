@@ -6,7 +6,10 @@ const CSS = `
   border:1px solid rgba(255,150,90,.35);border-radius:10px;padding:12px;backdrop-filter:blur(6px);
   box-shadow:0 0 24px rgba(255,110,40,.15);transition:opacity .25s,transform .25s}
 #mission.hidden{opacity:0;transform:translateX(20px);pointer-events:none}
-#mission h1{margin:0 0 8px;font-size:12px;letter-spacing:.18em;color:#ff9a5a}
+#mission .lang{position:absolute;top:10px;right:12px;display:flex;gap:2px}
+#mission .lang button{font:inherit;font-size:10px;color:#9c7360;background:none;border:1px solid transparent;border-radius:4px;padding:1px 5px;cursor:pointer}
+#mission .lang button[aria-pressed=true]{color:#ffe2c6;border-color:rgba(255,150,90,.45)}
+#mission h1{margin:0 0 8px;padding-right:58px;font-size:12px;letter-spacing:.18em;color:#ff9a5a}
 #mission .card{border-top:1px solid rgba(255,150,90,.2);padding:8px 0}
 #mission .name{color:#d9a888;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
 #mission .src{float:right;color:#9c7360;font-size:10px}
@@ -38,6 +41,8 @@ function drawChart(canvas, data) {
   ctx.fill();
 }
 
+import { lang, LANGS, setLang, t } from './i18n.js';
+
 export function createMissionControl(telemetry) {
   const style = document.createElement('style');
   style.textContent = CSS;
@@ -45,7 +50,9 @@ export function createMissionControl(telemetry) {
 
   const root = document.createElement('aside');
   root.id = 'mission';
-  root.innerHTML = '<h1>CONTROL DE MISIÓN · PERCY</h1>';
+  root.innerHTML = `<h1>${t.missionTitle}</h1><nav class="lang">${LANGS.map((l) =>
+    `<button data-lang="${l}" aria-pressed="${l === lang}">${l.toUpperCase()}</button>`).join('')}</nav>`;
+  root.querySelectorAll('[data-lang]').forEach((b) => b.addEventListener('click', () => b.dataset.lang !== lang && setLang(b.dataset.lang)));
   document.body.appendChild(root);
 
   const status = {}; // key -> 'cargando' | 'ok' | 'error'; lo lee npm run check
@@ -61,7 +68,7 @@ export function createMissionControl(telemetry) {
     const val = card.querySelector('.val'), canvas = card.querySelector('canvas');
     let data = [];
     const show = (d) => {
-      val.innerHTML = `${d.y.toLocaleString('es', { maximumFractionDigits: meta.digits })} <small>${meta.unit}</small>`;
+      val.innerHTML = `${d.y.toLocaleString(lang, { maximumFractionDigits: meta.digits })} <small>${meta.unit}</small>`;
       window.__mission.values[meta.key] = d.y;
     };
 
@@ -80,14 +87,14 @@ export function createMissionControl(telemetry) {
       })
       .catch((err) => {
         status[meta.key] = 'error';
-        val.textContent = 'sin señal';
+        val.textContent = t.noSignal;
         console.warn(`Telemetría ${meta.key}:`, err);
       });
   }
 
   const hint = document.createElement('div');
   hint.className = 'hint';
-  hint.textContent = 'T · ocultar';
+  hint.textContent = t.hideHint;
   root.appendChild(hint);
 
   window.addEventListener('keydown', (e) => {
